@@ -1,22 +1,189 @@
+/* Estilos generales */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    background-color: #f8f9fa;
+}
+
+/* Estilos específicos */
+.sidebar {
+    min-height: calc(100vh - 56px);
+    background-color: #f8f9fa;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.main-content {
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.nav-link {
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+    .nav-link.active {
+        background-color: #0d6efd;
+        color: white;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-link:hover:not(.active) {
+        background-color: #e9ecef;
+        transform: translateX(5px);
+    }
+
+.ticket-urgencia-alta {
+    background-color: #ffdddd;
+}
+
+.ticket-urgencia-media {
+    background-color: #ffffdd;
+}
+
+.ticket-urgencia-baja {
+    background-color: #ddffdd;
+}
+
+/* Animaciones y efectos */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .card:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+.hover-card:hover {
+    transform: translateY(-5px);
+}
+
+.btn {
+    transition: all 0.3s ease;
+}
+
+    .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+.table {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.table-hover tbody tr:hover {
+    transform: scale(1.01);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+/* Iconos animados */
+.icon-wrapper {
+    display: inline-block;
+    padding: 15px;
+    border-radius: 50%;
+    background-color: rgba(13, 110, 253, 0.1);
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+    .icon-wrapper:hover {
+        background-color: rgba(13, 110, 253, 0.2);
+        transform: scale(1.1);
+    }
+
+/* Estadísticas */
+.stat-item {
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+    .stat-item i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+
+    .stat-item h3 {
+        font-size: 1.8rem;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .stat-item:hover {
+        transform: translateY(-5px);
+    }
+
+/* Toast personalizado */
+.toast {
+    transition: all 0.3s ease;
+}
+
+/* Animaciones para formularios */
+.form-control, .form-select {
+    transition: all 0.3s ease;
+}
+
+    .form-control:focus, .form-select:focus {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(13, 110, 253, 0.1);
+    }
+
+/* Badges animados */
+.badge {
+    transition: all 0.3s ease;
+}
+
+    .badge:hover {
+        transform: scale(1.1);
+    }
+
+/* Animación para alertas */
+.alert {
+    transition: all 0.5s ease;
+}
+
+/* Animación para el contenedor principal */
+.content-wrapper {
+    animation-duration: 0.5s;
+}
+
+/* Estilos para pantallas pequeñas */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        left: -100%;
+        width: 80%;
+        z-index: 1000;
+        transition: left 0.3s ease;
+    }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+    .main-content {
+        width: 100%;
+    }
 }
