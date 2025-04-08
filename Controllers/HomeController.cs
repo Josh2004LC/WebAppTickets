@@ -1,13 +1,41 @@
 using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using TicketsMVC.Models;
+using TicketsMVC.Services;
 
-namespace SistemaTickets.Controllers
+namespace TicketsMVC.Controllers
 {
-    [Authorize]
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ILogger<HomeController> _logger;
+        private readonly ITicketService _ticketService;
+
+        public HomeController(ILogger<HomeController> logger, ITicketService ticketService)
+        {
+            _logger = logger;
+            _ticketService = ticketService;
+        }
+
+        public async Task<IActionResult> Index()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                try
+                {
+                    var tickets = await _ticketService.GetAllTicketsAsync();
+                    return View(tickets);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Error retrieving tickets");
+                    return View(new List<Ticket>());
+                }
+            }
+
+            return View();
+        }
+
+        public IActionResult Privacy()
         {
             return View();
         }
@@ -17,11 +45,5 @@ namespace SistemaTickets.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-    }
-
-    public class ErrorViewModel
-    {
-        public string RequestId { get; set; }
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }

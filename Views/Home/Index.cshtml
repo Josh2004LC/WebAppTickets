@@ -1,147 +1,109 @@
-﻿@{
+﻿@model IEnumerable<TicketsMVC.Models.Ticket>
+@{
     ViewData["Title"] = "Inicio";
 }
 
-<div class="text-center mt-5 animate__animated animate__fadeIn">
+<div class="text-center">
     <h1 class="display-4">Bienvenido al Sistema de Tickets</h1>
-    <p class="lead">Seleccione una opción del menú lateral para comenzar.</p>
-
-    <div class="row mt-5">
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm hover-card">
-                <div class="card-body text-center">
-                    <div class="icon-wrapper mb-3">
-                        <i class="bi bi-ticket-perforated text-primary" style="font-size: 3rem;"></i>
+    
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Tickets Recientes</h5>
                     </div>
-                    <h5 class="card-title">Gestión de Tiquetes</h5>
-                    <p class="card-text">Administre los tiquetes de soporte técnico.</p>
-                    <a asp-controller="Tiquetes" asp-action="Index" class="btn btn-primary btn-lg w-100">
-                        <i class="bi bi-arrow-right-circle me-2"></i>Ir a Tiquetes
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm hover-card">
-                <div class="card-body text-center">
-                    <div class="icon-wrapper mb-3">
-                        <i class="bi bi-people text-primary" style="font-size: 3rem;"></i>
-                    </div>
-                    <h5 class="card-title">Gestión de Usuarios</h5>
-                    <p class="card-text">Administre los usuarios del sistema.</p>
-                    <a asp-controller="Usuarios" asp-action="Index" class="btn btn-primary btn-lg w-100">
-                        <i class="bi bi-arrow-right-circle me-2"></i>Ir a Usuarios
-                    </a>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card mb-4 shadow-sm hover-card">
-                <div class="card-body text-center">
-                    <div class="icon-wrapper mb-3">
-                        <i class="bi bi-person-badge text-primary" style="font-size: 3rem;"></i>
-                    </div>
-                    <h5 class="card-title">Gestión de Roles</h5>
-                    <p class="card-text">Administre los roles del sistema.</p>
-                    <a asp-controller="Roles" asp-action="Index" class="btn btn-primary btn-lg w-100">
-                        <i class="bi bi-arrow-right-circle me-2"></i>Ir a Roles
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mt-4">
-        <div class="col-md-6 offset-md-3">
-            <div class="card bg-light">
-                <div class="card-body">
-                    <h5 class="card-title">Estadísticas Rápidas</h5>
-                    <div class="row text-center">
-                        <div class="col-4">
-                            <div class="stat-item">
-                                <i class="bi bi-ticket text-danger"></i>
-                                <h3 id="ticketCount">--</h3>
-                                <p>Tiquetes</p>
+                    <div class="card-body">
+                        @if (Model != null && Model.Any())
+                        {
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Asunto</th>
+                                            <th>Estado</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var ticket in Model.Take(5))
+                                        {
+                                            <tr>
+                                                <td>@ticket.ti_identificador</td>
+                                                <td>
+                                                    <a asp-controller="Tickets" asp-action="Details" asp-route-id="@ticket.ti_identificador">
+                                                        @ticket.ti_asunto
+                                                    </a>
+                                                </td>
+                                                <td>
+                                                    @switch (ticket.ti_estado)
+                                                    {
+                                                        case "Pendiente":
+                                                            <span class="badge bg-warning">Pendiente</span>
+                                                            break;
+                                                        case "En Proceso":
+                                                            <span class="badge bg-primary">En Proceso</span>
+                                                            break;
+                                                        case "Resuelto":
+                                                            <span class="badge bg-success">Resuelto</span>
+                                                            break;
+                                                        case "Cerrado":
+                                                            <span class="badge bg-secondary">Cerrado</span>
+                                                            break;
+                                                        default:
+                                                            <span class="badge bg-info">@ticket.ti_estado</span>
+                                                            break;
+                                                    }
+                                                </td>
+                                                <td>@ticket.ti_fecha_adicion.ToString("dd/MM/yyyy")</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="stat-item">
-                                <i class="bi bi-people text-success"></i>
-                                <h3 id="userCount">--</h3>
-                                <p>Usuarios</p>
+                            <div class="text-center mt-3">
+                                <a asp-controller="Tickets" asp-action="Index" class="btn btn-primary">Ver Todos los Tickets</a>
                             </div>
-                        </div>
-                        <div class="col-4">
-                            <div class="stat-item">
-                                <i class="bi bi-check-circle text-primary"></i>
-                                <h3 id="resolvedCount">--</h3>
-                                <p>Resueltos</p>
-                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-center">No hay tickets disponibles.</p>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">Acciones Rápidas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-3">
+                            <a asp-controller="Tickets" asp-action="Create" class="btn btn-success">
+                                <i class="bi bi-plus-circle"></i> Crear Nuevo Ticket
+                            </a>
+                            <a asp-controller="Tickets" asp-action="Index" class="btn btn-info">
+                                <i class="bi bi-list-ul"></i> Listar Tickets
+                            </a>
+                            @if (User.IsInRole("Administrador"))
+                            {
+                                <a asp-controller="Users" asp-action="Index" class="btn btn-secondary">
+                                    <i class="bi bi-people"></i> Gestionar Usuarios
+                                </a>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    }
+    else
+    {
+        <p class="mt-4">Por favor, inicie sesión para acceder al sistema.</p>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-primary">
+            <i class="bi bi-box-arrow-in-right"></i> Iniciar Sesión
+        </a>
+    }
 </div>
-
-@section Scripts {
-    <script>
-        // Animación para contar números
-        document.addEventListener('DOMContentLoaded', function() {
-            // Simular carga de datos
-            setTimeout(() => {
-                animateCount('ticketCount', 0, 24, 1500);
-                animateCount('userCount', 0, 8, 1500);
-                animateCount('resolvedCount', 0, 16, 1500);
-            }, 500);
-        });
-
-        function animateCount(elementId, start, end, duration) {
-            let startTimestamp = null;
-            const element = document.getElementById(elementId);
-            const step = (timestamp) => {
-                if (!startTimestamp) startTimestamp = timestamp;
-                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
-                const value = Math.floor(progress * (end - start) + start);
-                element.textContent = value;
-                if (progress < 1) {
-                    window.requestAnimationFrame(step);
-                }
-            };
-            window.requestAnimationFrame(step);
-        }
-
-        // Animación para las tarjetas
-        const cards = document.querySelectorAll('.hover-card');
-        cards.forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                this.style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
-                this.style.transform = 'translateY(-10px)';
-                this.style.boxShadow = '0 15px 30px rgba(0, 0, 0, 0.1)';
-            });
-
-            card.addEventListener('mouseleave', function() {
-                this.style.transform = 'translateY(0)';
-                this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.05)';
-            });
-        });
-
-        // Animación para los iconos
-        const iconWrappers = document.querySelectorAll('.icon-wrapper');
-        iconWrappers.forEach(wrapper => {
-            wrapper.addEventListener('mouseenter', function() {
-                const icon = this.querySelector('i');
-                icon.style.transition = 'transform 0.3s ease';
-                icon.style.transform = 'scale(1.2) rotate(10deg)';
-            });
-
-            wrapper.addEventListener('mouseleave', function() {
-                const icon = this.querySelector('i');
-                icon.style.transform = '  {
-                const icon = this.querySelector('i');
-                icon.style.transform = 'scale(1) rotate(0deg)';
-            });
-        });
-    </script>
-}

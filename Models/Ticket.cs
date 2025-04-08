@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace SistemaTickets.Models
+namespace TicketsMVC.Models
 {
-    public class Tiquete
+    public class Ticket
     {
         public int ti_identificador { get; set; }
 
@@ -13,37 +12,48 @@ namespace SistemaTickets.Models
 
         [Required(ErrorMessage = "La categoría es obligatoria")]
         [Display(Name = "Categoría")]
-        public string ti_categoria { get; set; }
+        public int ti_categoria { get; set; }
 
-        [Required(ErrorMessage = "Debe asignar el ticket a un usuario")]
-        [Display(Name = "Asignado a")]
+        [Display(Name = "Usuario Asignado")]
         public int ti_us_id_asigna { get; set; }
 
         [Required(ErrorMessage = "La urgencia es obligatoria")]
         [Display(Name = "Urgencia")]
-        public string ti_urgencia { get; set; }
+        public int ti_urgencia { get; set; }
 
         [Required(ErrorMessage = "La importancia es obligatoria")]
         [Display(Name = "Importancia")]
-        public string ti_importancia { get; set; }
+        public int ti_importancia { get; set; }
 
-        [Required(ErrorMessage = "El estado es obligatorio")]
         [Display(Name = "Estado")]
         public string ti_estado { get; set; }
 
         [Display(Name = "Solución")]
         public string ti_solucion { get; set; }
 
-        [Display(Name = "Fecha de creación")]
+        [Display(Name = "Fecha de Creación")]
         public DateTime ti_fecha_adicion { get; set; }
 
-        [Display(Name = "Creado por")]
+        [Display(Name = "Creado Por")]
         public string ti_adicionado_por { get; set; }
 
-        [Display(Name = "Fecha de modificación")]
+        [Display(Name = "Fecha de Modificación")]
         public DateTime? ti_fecha_modificacion { get; set; }
 
-        [Display(Name = "Modificado por")]
+        [Display(Name = "Modificado Por")]
         public string ti_modificado_por { get; set; }
+
+        // Navigation properties for display purposes
+        [Display(Name = "Categoría")]
+        public string CategoryName { get; set; }
+
+        [Display(Name = "Urgencia")]
+        public string UrgencyName { get; set; }
+
+        [Display(Name = "Importancia")]
+        public string ImportanceName { get; set; }
+
+        [Display(Name = "Usuario Asignado")]
+        public string AssignedUserName { get; set; }
     }
 }

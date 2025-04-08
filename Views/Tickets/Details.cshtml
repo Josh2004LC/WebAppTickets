@@ -1,0 +1,155 @@
+﻿@model TicketsMVC.Models.Ticket
+@{
+	ViewData["Title"] = "Detalles del Ticket";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+	<h1>@ViewData["Title"]</h1>
+	<div>
+		<a asp-action="Index" class="btn btn-secondary">
+			<i class="bi bi-arrow-left"></i> Volver
+		</a>
+		<a asp-action="Edit" asp-route-id="@Model.ti_identificador" class="btn btn-warning">
+			<i class="bi bi-pencil"></i> Editar
+		</a>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-md-8">
+		<div class="card mb-4">
+			<div class="card-header">
+				<h5 class="mb-0">Información del Ticket</h5>
+			</div>
+			<div class="card-body">
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">ID:</div>
+					<div class="col-md-9">@Model.ti_identificador</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">Asunto:</div>
+					<div class="col-md-9">@Model.ti_asunto</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">Categoría:</div>
+					<div class="col-md-9">@Model.CategoryName</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">Urgencia:</div>
+					<div class="col-md-9">@Model.UrgencyName</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">Importancia:</div>
+					<div class="col-md-9">@Model.ImportanceName</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">Estado:</div>
+					<div class="col-md-9">
+						@switch (Model.ti_estado)
+						{
+							case "Pendiente":
+								<span class="badge bg-warning">Pendiente</span>
+								break;
+							case "En Proceso":
+								<span class="badge bg-primary">En Proceso</span>
+								break;
+							case "Resuelto":
+								<span class="badge bg-success">Resuelto</span>
+								break;
+							case "Cerrado":
+								<span class="badge bg-secondary">Cerrado</span>
+								break;
+							default:
+								<span class="badge bg-info">@Model.ti_estado</span>
+								break;
+						}
+					</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">Asignado a:</div>
+					<div class="col-md-9">@Model.AssignedUserName</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">Creado por:</div>
+					<div class="col-md-9">@Model.ti_adicionado_por</div>
+				</div>
+				<div class="row mb-3">
+					<div class="col-md-3 fw-bold">Fecha de creación:</div>
+					<div class="col-md-9">@Model.ti_fecha_adicion.ToString("dd/MM/yyyy HH:mm")</div>
+				</div>
+				@if (Model.ti_fecha_modificacion.HasValue)
+				{
+					<div class="row mb-3">
+						<div class="col-md-3 fw-bold">Modificado por:</div>
+						<div class="col-md-9">@Model.ti_modificado_por</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-md-3 fw-bold">Fecha de modificación:</div>
+						<div class="col-md-9">@Model.ti_fecha_modificacion.Value.ToString("dd/MM/yyyy HH:mm")</div>
+					</div>
+				}
+			</div>
+		</div>
+
+		<div class="card">
+			<div class="card-header">
+				<h5 class="mb-0">Solución</h5>
+			</div>
+			<div class="card-body">
+				@if (!string.IsNullOrEmpty(Model.ti_solucion))
+				{
+					<p>@Model.ti_solucion</p>
+				}
+				else
+				{
+					<p class="text-muted">No se ha registrado una solución para este ticket.</p>
+				}
+
+				@if (User.IsInRole("Analista") || User.IsInRole("Administrador"))
+				{
+					<hr />
+					<form asp-action="UpdateSolution" method="post">
+						<input type="hidden" name="id" value="@Model.ti_identificador" />
+						<div class="mb-3">
+							<label for="solution" class="form-label">Actualizar solución:</label>
+							<textarea name="solution" id="solution" class="form-control" rows="3">@Model.ti_solucion</textarea>
+						</div>
+						<button type="submit" class="btn btn-primary">Guardar Solución</button>
+					</form>
+				}
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-4">
+		<div class="card mb-4">
+			<div class="card-header">
+				<h5 class="mb-0">Acciones</h5>
+			</div>
+			<div class="card-body">
+				<form asp-action="ChangeStatus" method="post" class="mb-3">
+					<input type="hidden" name="id" value="@Model.ti_identificador" />
+					<div class="mb-3">
+						<label for="newStatus" class="form-label">Cambiar estado:</label>
+						<select name="newStatus" id="newStatus" class="form-select">
+							<option value="Pendiente" selected="@(Model.ti_estado == "Pendiente")">Pendiente</option>
+							<option value="En Proceso" selected="@(Model.ti_estado == "En Proceso")">En Proceso</option>
+							<option value="Resuelto" selected="@(Model.ti_estado == "Resuelto")">Resuelto</option>
+							<option value="Cerrado" selected="@(Model.ti_estado == "Cerrado")">Cerrado</option>
+						</select>
+					</div>
+					<button type="submit" class="btn btn-primary">Actualizar Estado</button>
+				</form>
+
+				<div class="d-grid gap-2">
+					<a asp-action="Edit" asp-route-id="@Model.ti_identificador" class="btn btn-warning">
+						<i class="bi bi-pencil"></i> Editar Ticket
+					</a>
+					<a asp-action="Delete" asp-route-id="@Model.ti_identificador" class="btn btn-danger">
+						<i class="bi bi-trash"></i> Eliminar Ticket
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
